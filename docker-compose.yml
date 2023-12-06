@@ -1,0 +1,62 @@
+version: '3.9'
+
+networks:
+  mynetwork:
+    driver: bridge
+
+services:
+  your_app:
+    container_name: authorization
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=user
+      - DB_USER=postgres
+      - DB_PASSWORD=0998
+#    volumes:
+#      - /home/authorization:/app
+    volumes:
+        - ./:/app
+    networks:
+      - mynetwork
+    logging:
+      driver: json-file
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+
+  db:
+    container_name: pg_db
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_DB=user
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=0998
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5434:5432
+    networks:
+      - mynetwork
+    env_file:
+      - config.env
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - 5051:80
+    networks:
+      - mynetwork
+    env_file:
+      - config.env
+

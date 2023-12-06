@@ -1,0 +1,10 @@
+psycopg2-binary
+sqlalchemy
+flask
+python-dotenv
+Flask-Login
+Flask-SQLAlchemy
+Werkzeug
+python-dotenv
+flask_migrate
+gunicorn
